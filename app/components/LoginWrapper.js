@@ -3,12 +3,36 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Login from 'react-native-simple-login'
 import InputScreen from './InputScreen'
+import { firebaseRef } from '../services/firebase.js'
 
 export default class LoginWrapper extends Component {
     onLogin(email, password){
+        email = "canaleschiko@gmail.com"
+        password = "123456"
         console.log(email, password)
+        firebaseRef.auth().signInWithEmailAndPassword(email, password)
+        .then((result) => {
+            firebaseRef.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    console.log("logiiniiiiinnininini")
+                    Actions.main()
+                  // User is signed in.
+                } else {
+                    console.log("no pasó na")
+                  // No user is signed in.
+                }
+            });
+          })
+        .catch(function(error) {
+            // Handle Errors here.
+            console.log(error.code)
+            console.log(error.message)
+            // ...
+        })
+
+        // Actions.main()
         // Actions.main({type: "reset"})
-        Actions.main()
+        
         // this.props.navigator.immediatelyResetRouterStack([{
         //     component: InputScreen
         // }])
@@ -17,7 +41,8 @@ export default class LoginWrapper extends Component {
         console.log(email, password)
     }
     componentDidMount(){
-        Actions.main()
+        console.log(firebaseRef)
+        // Actions.main()
     }
     render(){
         return(

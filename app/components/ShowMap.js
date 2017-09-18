@@ -11,7 +11,7 @@ import MapView from 'react-native-maps'
 
 const LATITUD_DELTA = 0.0922
 
-// const LONGITUDE_DELTA = 0.0421
+const LONGITUDE_DELTA = 0.0421
 
 export default class ShowMap extends Component {
     constructor(props) {
@@ -177,6 +177,7 @@ export default class ShowMap extends Component {
                     style = {styles.map}
                     region={mapRegion}
                     onRegionChangeComplete={this.onRegionChange.bind(this)}
+                    ref={(ref) => { this.mapRef = ref }}
                 >
 
                 <MapView.Marker
