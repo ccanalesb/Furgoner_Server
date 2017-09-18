@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+ <Document>
+  <name>KML Name</name>
+  <description>KML Description</description>
+  <Style id="style1">
+   <LineStyle>
+    <color>990000ff</color>
+    <width>4</width>
+   </LineStyle>
+  </Style>
+  <Placemark>
+   <name>Polyline 1</name>
+   <description></description>
+   <styleUrl>#style1</styleUrl>
+   <LineString>
+    <altitudeMode>relative</altitudeMode>
+    <coordinates>
+-121.9400,37.3183
+-121.9287,37.3169
+-121.9146,37.3145
+-121.9060,37.3137
+-121.8995,37.3210
+-121.8868,37.3257
+-121.8748,37.3276
+-121.8662,37.3295
+-121.8525,37.3382
+-121.8604,37.3494
+-121.8748,37.3573
+-121.8885,37.3631
+-121.9043,37.3652
+-121.9321,37.3729
+-121.9561,37.3794
+-121.9637,37.3876
+-121.9754,37.3985
+-122.0118,37.3933
+-122.0368,37.4023
+-122.0677,37.4075
+-122.0931,37.4173
+-122.1093,37.4190
+-122.1237,37.4089
+-122.1333,37.3993
+-122.1439,37.3939
+-122.1560,37.3846
+-122.1738,37.3873
+-122.1481,37.3723
+-122.1305,37.3647
+-122.1031,37.3497
+-122.0763,37.3371
+-122.0282,37.3328
+   </coordinates>
+   </LineString>
+  </Placemark>
+ </Document>
+</kml>
