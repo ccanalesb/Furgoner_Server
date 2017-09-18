@@ -7,12 +7,14 @@ import { firebaseRef } from '../services/firebase.js'
 
 export default class LoginWrapper extends Component {
     onLogin(email, password){
-        email = "canaleschiko@gmail.com"
-        password = "123456"
+        if(email == "" || password == ""){
+            email = "canaleschiko@gmail.com"
+            password = "123456"
+        }
         console.log(email, password)
         firebaseRef.auth().signInWithEmailAndPassword(email, password)
         .then((result) => {
-            firebaseRef.auth().onAuthStateChanged(function(user) {
+            firebaseRef.auth().onAuthStateChanged((user) => {
                 if (user) {
                     console.log("logiiniiiiinnininini")
                     Actions.main()
@@ -23,7 +25,7 @@ export default class LoginWrapper extends Component {
                 }
             });
           })
-        .catch(function(error) {
+        .catch((error) => {
             // Handle Errors here.
             console.log(error.code)
             console.log(error.message)
