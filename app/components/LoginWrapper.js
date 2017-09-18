@@ -17,6 +17,8 @@ export default class LoginWrapper extends Component {
             firebaseRef.auth().onAuthStateChanged((user) => {
                 if (user) {
                     console.log("logiiniiiiinnininini")
+                    console.log(user.displayName)
+                    console.log(user.email)
                     Actions.main()
                   // User is signed in.
                 } else {
@@ -29,6 +31,7 @@ export default class LoginWrapper extends Component {
             // Handle Errors here.
             console.log(error.code)
             console.log(error.message)
+            alert(JSON.stringify(error.message))
             // ...
         })
 
