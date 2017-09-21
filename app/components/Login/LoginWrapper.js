@@ -103,6 +103,11 @@ export default class LoginWrapper extends Component {
                                 Ingresar
                             </Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.buttonRegisterContainer} >
+                            <Text style={styles.buttonText}> 
+                                Crear cuenta
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <Spinner visible={this.state.visible} textContent={"Cargando..."} textStyle={{color: '#FFF'}} />
@@ -156,8 +161,13 @@ const styles = StyleSheet.create({
         padding: 20
     },
     buttonContainer:{
-        backgroundColor: '#d35400',
+        backgroundColor: '#FF9800',
         paddingVertical: 20
+    },
+    buttonRegisterContainer:{
+        backgroundColor: '#FFB74D',
+        paddingVertical: 5,
+        marginTop: 10
     },
     buttonText: {
         textAlign: 'center',
