@@ -7,56 +7,62 @@ import {
     ScrollView, 
     TextInput,
     TouchableOpacity,
-    Button } from 'react-native';
+    Button,
+KeyboardAvoidingView  } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { Actions } from 'react-native-router-flux';
-import Login from 'react-native-simple-login'
 import { firebaseRef } from '../../services/firebase.js'
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export default class LoginWrapper extends Component {
+export default class NewAccount extends Component {
     constructor(props){
         super(props)
         this.state ={
             email : '',
             password : '',
+            password_repeat: '',
             visible : false
         }
     }
-    onLogin(){
+    createAccount(){
         let email = this.state.email
         let password = this.state.password
-        if(email == "" || password == ""){
-            email = "canaleschiko@gmail.com"
-            password = "123456"
+        let password_repeat = this.state.password_repeat
+        if(password === password_repeat){
+            this.setState({visible:true})
+            firebaseRef.auth().createUserWithEmailAndPassword(email, password)
+            .then((result) => {
+                firebaseRef.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        firebaseRef.database().ref('School_bus/' + user.uid).set({
+                            latitude: 0,
+                            longitude: 0,
+                          });
+                        Actions.main()
+                        this.setState({visible:false})
+                    // User is signed in.
+                    } else {
+                        console.log("no pasó na")
+                        alert("Se creó la cuenta, pero no se pudo conectar al usuario")
+                        this.setState({visible:false})
+                        Actions.login()
+                    // No user is signed in.
+                    }
+                });
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                console.log(error.code)
+                console.log(error.message)
+                alert(JSON.stringify(error.message))
+                this.setState({visible:false})
+            })
         }
-        console.log(email, password)
-        this.setState({visible:true})
-        firebaseRef.auth().signInWithEmailAndPassword(email, password)
-        .then((result) => {
-            console.log(result)
-            firebaseRef.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    console.log("logiiniiiiinnininini")
-                    console.log(user.displayName)
-                    console.log(user.email)
-                    Actions.main()
-                    this.setState({visible:false})
-                  // User is signed in.
-                } else {
-                    console.log("no pasó na")
-                  // No user is signed in.
-                }
-            });
-          })
-        .catch((error) => {
-            // Handle Errors here.
-            console.log(error.code)
-            console.log(error.message)
-            alert(JSON.stringify(error.message))
+        else {
             this.setState({visible:false})
-            // ...
-        })
+            alert("Las contraseñas no son iguales")
+        }
 
     }
     onResetPassword(email, password){
@@ -66,39 +72,21 @@ export default class LoginWrapper extends Component {
         console.log(firebaseRef)
         // Actions.main()
     }
-    createAccount(){
-        Actions.newAccount()
-    }
-    componentWillMount(){
-        this.setState({visible:true})
-        firebaseRef.auth().onAuthStateChanged((user) => {
-            if (user) {
-                console.log("ya estaba conectado")
-                console.log(user.displayName)
-                console.log(user.email)
-                Actions.main()
-                this.setState({visible:false})
-              // User is signed in.
-            } else {
-                console.log("no estaba conectado")
-                this.setState({visible:false})
-              // No user is signed in.
-            }
-        });
-    }
     render(){
         return(
+            
             <View style={styles.container}>
+                <KeyboardAwareScrollView>
                 <View style={styles.logoContainer}>
                     <Image 
                         style={styles.logo}
                         source= { require('../../../images/login.jpeg') }
                         />
                     <Text style={styles.title}>
-                        Bienvenido a Furgoner
+                        Cree su cuenta
                     </Text>
                 </View>
-                <View style={styles.form}>
+                <View>
                     <View style={styles.formContainer}>
                         <TextInput 
                             style={styles.input}
@@ -120,12 +108,15 @@ export default class LoginWrapper extends Component {
                             onChangeText = { (text) => this.setState({password: text}) }
                         >
                         </TextInput>
-                        <TouchableOpacity style={styles.buttonContainer} onPress = {this.onLogin.bind(this)}>
-                            <Text style={styles.buttonText}> 
-                                Ingresar
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonRegisterContainer} onPress = { this.createAccount.bind(this) } >
+                        <TextInput 
+                            style={styles.input}
+                            placeholderTextColor='rgba(0,0,0,0.2)'
+                            placeholder= "Repetir contraseña"
+                            secureTextEntry
+                            onChangeText = { (text) => this.setState({password_repeat: text}) }
+                        >
+                        </TextInput>
+                        <TouchableOpacity style={styles.buttonContainer} onPress = {this.createAccount.bind(this)}>
                             <Text style={styles.buttonText}> 
                                 Crear cuenta
                             </Text>
@@ -133,22 +124,11 @@ export default class LoginWrapper extends Component {
                     </View>
                 </View>
                 <Spinner visible={this.state.visible} textContent={"Cargando..."} textStyle={{color: '#FFF'}} />
-            </View>    
+                </KeyboardAwareScrollView> 
+            </View>
+            
 
 
-/*             <Login
-                onLogin={this.onLogin.bind(this)}
-                onResetPassword={this.onResetPassword}
-                logoImage = { require('../../images/login.jpeg') }
-                labels = { {
-                    userIdentification: "Email",
-                    password : "Contraseña",
-                    forgotPassword : "Olvidó su contraseña?",
-                    loginFormButton : "Entrar",
-                    forgotPasswordFormButton: "Enviar",
-                    back : "Atrás"
-                }}
-             /> */
         )
     }
 }

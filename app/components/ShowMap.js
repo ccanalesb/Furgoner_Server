@@ -3,9 +3,13 @@ import {
     StyleSheet,
     View,
     Dimensions,
-    Button
+    Button,
+    TouchableOpacity,
+    Text
 } from 'react-native';
 import MapView from 'react-native-maps'
+import { Actions } from 'react-native-router-flux';
+import { firebaseRef } from '../services/firebase.js'
 
 
 
@@ -34,12 +38,14 @@ export default class ShowMap extends Component {
                 latitude : 0,
                 longitude : 0
             },
-            follow_marker : true
+            follow_marker : true,
+            user : {}
         };
     }
     watchID : ?number = null
 
     componentDidMount () {
+        console.log(this.state)
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 var lat = parseFloat(position.coords.latitude)
@@ -62,12 +68,17 @@ export default class ShowMap extends Component {
                 console.log("Get current position")
 
             }, (error) => alert(JSON.stringify(error)),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge : 1000 })
+            { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
 
             this.watchID = navigator.geolocation.watchPosition((position)=>{
+
                 console.log("Watching position")
                 var lat = parseFloat(position.coords.latitude)
                 var long = parseFloat(position.coords.longitude)
+                firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
+                    latitude: lat,
+                    longitude: long,
+                  });
                 // const { latitudeDelta, longitudeDelta} = getRegionForCoordinates({ latitude: lat, longitude: long })
                 // console.log(latitudeDelta)
                 // console.log(longitudeDelta)
@@ -151,11 +162,22 @@ export default class ShowMap extends Component {
                 }
             })
         }
-        console.log(this.state)
+ 
     }
-    
+    componentWillMount(){
+        firebaseRef.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({ user: user })
+            } else {
+                alert("No existe usuario conectado")
+                Actions.login()
+            }
+        });
+    }
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps)
+    }
     render(){
-        console.log(this.state.position)
         let mapRegion = {}
         if(this.state.follow_marker){
             mapRegion = this.state.position
@@ -165,14 +187,6 @@ export default class ShowMap extends Component {
         }
         return (
             <View style = {styles.container} >
-                <View style={styles.button}>
-                    <Button
-                        name = "Click me"
-                        title = "Click me"
-                        onPress = {this.handlePress.bind(this)}
-                    >
-                    </Button>    
-                </View>
                 <MapView
                     style = {styles.map}
                     region={mapRegion}
@@ -193,6 +207,11 @@ export default class ShowMap extends Component {
                     </View>    
                 </MapView.Marker>
                 </MapView>
+                <TouchableOpacity style={styles.buttonContainer} onPress = {this.handlePress.bind(this)}>
+                    <Text style={styles.buttonText}>
+                        Iniciar Viaje
+                    </Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -226,17 +245,33 @@ const styles = StyleSheet.create({
       width: '100%',
       justifyContent: 'center',
       alignItems: 'baseline',
+
     },
     map: {
       ...StyleSheet.absoluteFillObject,
       borderTopWidth: 100,
       alignItems: 'baseline',
+
     },
     button: {
         position: 'absolute',
-        bottom: 0,
-        right: 0,
-        zIndex: 2
+        bottom: 10,
+        zIndex: 2,
+        paddingVertical: 20
+    },
+    buttonContainer:{
+        alignSelf : 'center',
+        backgroundColor: '#f10f3c',
+        paddingVertical: 20,
+        zIndex: 2,
+        width: '90%',
+        marginTop :'100%'
+    },
+    buttonText: {
+        textAlign: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 20,
     }
   });
 // const styles = StyleSheet.create({

@@ -18,11 +18,12 @@ import LoginWrapper  from './components/Login/LoginWrapper'
 import SideDrawer  from './components/SideDrawer'
 import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
+import NewAccount from './components/Login/NewAccount'
 
 export default class FurgonerServer extends Component {
   render(){
     return (
-      <Router>
+      <Router navigationBarStyle={styles.navBar} titleStyle={styles.navBarTitle}>
        
         <Stack key="root">
           <Scene key="login"
@@ -31,17 +32,23 @@ export default class FurgonerServer extends Component {
                   initial
                   hideNavBar
           />
+          <Scene
+            key="newAccount"
+            component = {NewAccount}
+            title="Crea tu cuenta"
+            
+          />
           <Scene key="main">
             <Drawer
               hideNavBar   
               key="drawer"
               contentComponent={DrawerContent}
-              drawerImage={ require('../images/menu_burger.png') }       
+              drawerImage={ require('../images/menu_burger2.png') }       
             >   
               <Scene
                 key="home"
                 component={ShowMap}
-                title="Inicio"
+                title="Proximos destinos"
                 initial
               />
               <Scene
@@ -57,3 +64,18 @@ export default class FurgonerServer extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  navBar: {
+    backgroundColor:'#f1c40f',
+  },
+  navBarTitle:{
+      color:'#FFFFFF'
+  },
+  barButtonTextStyle:{
+      color:'#FFFFFF'
+  },
+  barButtonIconStyle:{
+      tintColor:'rgb(255,255,255)'
+  },
+})
