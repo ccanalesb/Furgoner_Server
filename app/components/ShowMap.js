@@ -169,7 +169,7 @@ export default class ShowMap extends Component {
             if (user) {
                 this.setState({ user: user })
             } else {
-                alert("No existe usuario conectado")
+                this.setState({user: {}})
                 Actions.login()
             }
         });

@@ -20,7 +20,8 @@ export default class LoginWrapper extends Component {
         this.state ={
             email : '',
             password : '',
-            visible : false
+            visible : false,
+            login : false
         }
     }
     onLogin(){
@@ -34,16 +35,13 @@ export default class LoginWrapper extends Component {
         this.setState({visible:true})
         firebaseRef.auth().signInWithEmailAndPassword(email, password)
         .then((result) => {
-            console.log(result)
             firebaseRef.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    console.log("logiiniiiiinnininini")
-                    console.log(user.displayName)
-                    console.log(user.email)
                     Actions.main()
-                    this.setState({visible:false})
+                    this.setState({visible:false, login:true})
                   // User is signed in.
                 } else {
+                    this.setState({ login: false })
                     console.log("no pasó na")
                   // No user is signed in.
                 }
@@ -59,17 +57,11 @@ export default class LoginWrapper extends Component {
         })
 
     }
-    onResetPassword(email, password){
-        console.log(email, password)
-    }
-    componentDidMount(){
-        console.log(firebaseRef)
-        // Actions.main()
-    }
     createAccount(){
         Actions.newAccount()
     }
     componentWillMount(){
+        console.log("revisando si tenía sesión")
         this.setState({visible:true})
         firebaseRef.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -77,11 +69,11 @@ export default class LoginWrapper extends Component {
                 console.log(user.displayName)
                 console.log(user.email)
                 Actions.main()
-                this.setState({visible:false})
+                this.setState({visible:false, login:true})
               // User is signed in.
             } else {
                 console.log("no estaba conectado")
-                this.setState({visible:false})
+                this.setState({visible:false, login:false})
               // No user is signed in.
             }
         });
