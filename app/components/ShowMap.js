@@ -76,10 +76,11 @@ export default class ShowMap extends Component {
                 var lat = parseFloat(position.coords.latitude)
                 var long = parseFloat(position.coords.longitude)
                 if(this.state.user != null){
-                firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
-                    latitude: lat,
-                    longitude: long,
-                  });
+                    let timerID = setTimeout(() => {firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
+                        latitude: lat,
+                        longitude: long,
+                    })},4000)
+                    clearInterval(timerID)
                 }
                 // const { latitudeDelta, longitudeDelta} = getRegionForCoordinates({ latitude: lat, longitude: long })
                 // console.log(latitudeDelta)
@@ -109,10 +110,10 @@ export default class ShowMap extends Component {
                     })
                 }
 
-            })
+            }, (error) => alert(JSON.stringify(error)),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
         
     }
-
     onRegionChange(region){
         if(this.state.follow_marker){
             this.setState({
@@ -167,7 +168,7 @@ export default class ShowMap extends Component {
  
     }
     componentWillMount(){
-        firebaseRef.auth().onAuthStateChanged((user) => {
+        let timerID = setTimeout(() => {firebaseRef.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.setState({ user: user })
             } else {
@@ -175,12 +176,14 @@ export default class ShowMap extends Component {
                 navigator.geolocation.clearWatch(this.watchID)
                 Actions.login()
             }
-        });
+        })},4000)
+        clearInterval(timerID)
     }
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
     }
     render(){
+        /* this.watcher_position() */
         let mapRegion = {}
         if(this.state.follow_marker){
             mapRegion = this.state.position
