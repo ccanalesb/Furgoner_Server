@@ -14,15 +14,26 @@ const window = Dimensions.get('window');
 const uri = 'https://pickaface.net/gallery/avatar/Opi51c74d0125fd4.png';
 class DrawerContent extends React.Component {
 
-  logOut(){
+/*   logOut(){
     console.log("Cerrando sesión")
     firebaseRef.auth().signOut()
     .then(() => {
-      Actions.login()
+      Actions.login({logout:true})
     }, function(error) {
       alert("No se pudo cerrar sesión")
     });
-  }
+  } */
+
+  async logOut() {
+        try {
+            await firebaseRef.auth().signOut();
+            Actions.login({logout:true})
+        } catch (error) {
+            console.log(error);
+            alert("No se pudo cerrar sesión")
+        }
+    
+    }
   render() {
     return (
       <View style={styles.drawer}>

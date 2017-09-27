@@ -39,7 +39,7 @@ export default class ShowMap extends Component {
                 longitude : 0
             },
             follow_marker : true,
-            user : {}
+            user : null
         };
     }
     watchID : ?number = null
@@ -75,10 +75,12 @@ export default class ShowMap extends Component {
                 console.log("Watching position")
                 var lat = parseFloat(position.coords.latitude)
                 var long = parseFloat(position.coords.longitude)
+                if(this.state.user != null){
                 firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
                     latitude: lat,
                     longitude: long,
                   });
+                }
                 // const { latitudeDelta, longitudeDelta} = getRegionForCoordinates({ latitude: lat, longitude: long })
                 // console.log(latitudeDelta)
                 // console.log(longitudeDelta)
@@ -169,7 +171,8 @@ export default class ShowMap extends Component {
             if (user) {
                 this.setState({ user: user })
             } else {
-                this.setState({user: {}})
+                this.setState({user: null})
+                navigator.geolocation.clearWatch(this.watchID)
                 Actions.login()
             }
         });

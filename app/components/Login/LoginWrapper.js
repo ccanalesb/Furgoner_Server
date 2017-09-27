@@ -62,6 +62,7 @@ export default class LoginWrapper extends Component {
     }
     componentWillMount(){
         console.log("revisando si tenía sesión")
+        console.log(this.props)
         this.setState({visible:true})
         firebaseRef.auth().onAuthStateChanged((user) => {
             if (user) {
