@@ -136,7 +136,7 @@ export default class NewAccount extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#0ff1c4'
+        backgroundColor: '#fafafa'
     },
     logoContainer:{
         alignItems: 'center',
