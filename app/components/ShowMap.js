@@ -39,7 +39,7 @@ export default class ShowMap extends Component {
                 longitude : 0
             },
             follow_marker : true,
-            user : {}
+            user : null
         };
     }
     watchID : ?number = null
@@ -75,10 +75,13 @@ export default class ShowMap extends Component {
                 console.log("Watching position")
                 var lat = parseFloat(position.coords.latitude)
                 var long = parseFloat(position.coords.longitude)
-                firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
-                    latitude: lat,
-                    longitude: long,
-                  });
+                if(this.state.user != null){
+                    let timerID = setTimeout(() => {firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
+                        latitude: lat,
+                        longitude: long,
+                    })},4000)
+                    clearInterval(timerID)
+                }
                 // const { latitudeDelta, longitudeDelta} = getRegionForCoordinates({ latitude: lat, longitude: long })
                 // console.log(latitudeDelta)
                 // console.log(longitudeDelta)
@@ -107,10 +110,10 @@ export default class ShowMap extends Component {
                     })
                 }
 
-            })
+            }, (error) => alert(JSON.stringify(error)),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
         
     }
-
     onRegionChange(region){
         if(this.state.follow_marker){
             this.setState({
@@ -165,19 +168,22 @@ export default class ShowMap extends Component {
  
     }
     componentWillMount(){
-        firebaseRef.auth().onAuthStateChanged((user) => {
+        let timerID = setTimeout(() => {firebaseRef.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.setState({ user: user })
             } else {
-                alert("No existe usuario conectado")
+                this.setState({user: null})
+                navigator.geolocation.clearWatch(this.watchID)
                 Actions.login()
             }
-        });
+        })},4000)
+        clearInterval(timerID)
     }
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
     }
     render(){
+        /* this.watcher_position() */
         let mapRegion = {}
         if(this.state.follow_marker){
             mapRegion = this.state.position
