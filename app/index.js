@@ -19,6 +19,7 @@ import SideDrawer  from './components/SideDrawer'
 import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
 import NewAccount from './components/Login/NewAccount'
+import Attorneys from './components/Attorneys'
 
 export default class FurgonerServer extends Component {
   render(){
@@ -52,9 +53,9 @@ export default class FurgonerServer extends Component {
                 initial
               />
               <Scene
-                key="test"
-                component={InputScreen}
-                title="Gray"
+                key="attorneys"
+                component={Attorneys}
+                title="Apoderados"
               />
             </Drawer>  
           </Scene>

@@ -47,12 +47,20 @@ class DrawerContent extends React.Component {
           </View>
         </TouchableNativeFeedback>
         <ScrollView scrollsToTop={false} style={styles.content}>
-          <TouchableOpacity style={styles.listItem} onPress={() => console.log("about")}>
+          <TouchableOpacity style={styles.listItem} onPress={() => Actions.home()}>
+              <Text
+                
+                style= {styles.listItemTitle}
+              >
+                Mapa
+              </Text>
+            </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={() => Actions.attorneys()}>
             <Text
               
               style= {styles.listItemTitle}
             >
-              About
+              Apoderados
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={() => console.log("contact")}>
