@@ -59,7 +59,9 @@ export default class Attorneys extends Component {
                             <AttorneysCard key={i} attorney = {e}/>
                         )}
                 </List>
-                <View style={styles.form}>
+                
+            </ScrollView>
+            <View style={styles.form}>
                         <View style={styles.formContainer}>
                             <TouchableOpacity style={styles.buttonContainer} onPress={()=> this.setState({promptVisible:true})}>
                                 <Text style={styles.buttonText}> 
@@ -68,7 +70,6 @@ export default class Attorneys extends Component {
                             </TouchableOpacity>
                         </View>
                 </View>
-            </ScrollView>
             <Prompt
               title="Ingrese correo del apoderado"
               placeholder="example@mail.com"
@@ -122,13 +123,8 @@ const styles = StyleSheet.create({
   logoContainer:{
       alignItems: 'center',
       flexGrow: 1,
-      justifyContent: 'center'
-  },
-  list:{
-    flex :5
-  },
-  form:{
-    flex :1
+      justifyContent: 'center',
+      flex:1
   },
   logo: {
       width: 150,
