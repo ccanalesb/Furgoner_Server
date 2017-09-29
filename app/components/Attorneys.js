@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet,TouchableOpacity, ScrollView } from 'react-native';
 import Tabs from 'react-native-tabs';
 import Prompt from 'react-native-prompt';
 import { DatePicker, List, InputItem, Button, Card } from 'antd-mobile';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { firebaseRef } from '../services/firebase.js'
 import { sha256 } from 'react-native-sha256';
+import AttorneysCard from './AttorneysCard'
 
 export default class Attorneys extends Component {
     constructor(props) {
@@ -23,13 +24,19 @@ export default class Attorneys extends Component {
     searchEmail(value){
       this.setState({visible: true})
       sha256(value).then( hash => {
-          let search = "Attorney/"+hash
-          let ref = firebaseRef.database().ref(search);
-          ref.once("value")
-            .then(function(snapshot) {
-              alert(`El nombre de la persona es " ${snapshot.child("name").val()}"`)
-            console.log(snapshot.child("uid").val()); 
-          });
+        let search = "Attorney/"+hash
+        var ref = firebaseRef.database().ref(search);
+        console.log(ref)
+        ref.once("value")
+            .then((snapshot) => {
+                alert(`El nombre de la persona es " ${snapshot.child("name").val()}"`)
+                console.log(snapshot.child("children").numChildren())
+                console.log(snapshot.child("children").val()); 
+                let temp_atorney = this.state.attorneys
+                temp_atorney.push({ name : snapshot.child("name").val(), children: snapshot.child("children").val() , number_children: snapshot.child("children").numChildren() })
+                this.setState({attorneys : temp_atorney })
+        });
+          
       })
       this.setState({
         promptVisible: false,
@@ -46,20 +53,22 @@ export default class Attorneys extends Component {
         
         return (
           <View style={styles.container}>
-            <List style={styles.list}>
-              <List.Item>
-                item list
-              </List.Item>
-            </List>
-            <View style={styles.form}>
-                    <View style={styles.formContainer}>
-                        <TouchableOpacity style={styles.buttonContainer} onPress={()=> this.setState({promptVisible:true})}>
-                            <Text style={styles.buttonText}> 
-                                Agregar apoderado
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-            </View>
+            <ScrollView>
+                <List style={styles.list}>
+                { this.state.attorneys.map((e, i) =>
+                            <AttorneysCard key={i} attorney = {e}/>
+                        )}
+                </List>
+                <View style={styles.form}>
+                        <View style={styles.formContainer}>
+                            <TouchableOpacity style={styles.buttonContainer} onPress={()=> this.setState({promptVisible:true})}>
+                                <Text style={styles.buttonText}> 
+                                    Agregar apoderado
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                </View>
+            </ScrollView>
             <Prompt
               title="Ingrese correo del apoderado"
               placeholder="example@mail.com"
