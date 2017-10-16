@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "antd-mobile": "^1.6.5",
+    "antd-mobile": "^1.7.0",
     "firebase": "^4.3.1",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.1",
@@ -25,11 +25,13 @@
     "react-native-simple-login": "^1.1.0",
     "react-native-simple-modal": "^7.0.0",
     "react-native-tabs": "^1.0.9",
+    "react-native-uuid": "^1.4.9",
     "react-native-vector-icons": "^4.3.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",
