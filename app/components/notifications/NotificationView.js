@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Picker, AppState, Platform } from 'react-native';
 import PushController from './PushController';
 import PushNotification from 'react-native-push-notification';
+import { firebaseRef } from '../../services/firebase.js'
 
 const styles = StyleSheet.create({
   container: {
@@ -46,8 +47,10 @@ export default class App extends Component {
         date = date.toISOString();
       }
 
+      let user = firebaseRef.auth().currentUser;
+      let msg = "Su usuario es: " + user.email  
       PushNotification.localNotificationSchedule({
-        message: "My testtestets Message",
+        message: msg,
         date,
       });
     }
