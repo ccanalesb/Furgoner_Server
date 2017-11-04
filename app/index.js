@@ -19,6 +19,7 @@ import SideDrawer  from './components/SideDrawer'
 import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
 import NewAccount from './components/Login/NewAccount'
+import NotificationView from './components/notifications/NotificationView'
 import Attorneys from './components/Attorneys'
 import { firebaseRef } from './services/firebase.js'
 
@@ -73,6 +74,13 @@ export default class FurgonerServer extends Component {
                 component={Attorneys}
                 title="Apoderados"
               />
+              <Scene
+                key="notification"
+                component={NotificationView}
+                title="Notifficacioens"
+                
+              />
+
             </Drawer>  
           </Scene>
         </Stack>
