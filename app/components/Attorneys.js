@@ -26,7 +26,6 @@ export default class Attorneys extends Component {
       sha256(value).then( hash => {
         let search = "Attorney/"+hash
         var ref = firebaseRef.database().ref(search);
-        console.log(ref)
         ref.once("value")
             .then((snapshot) => {
                 alert(`El nombre de la persona es " ${snapshot.child("name").val()}"`)
@@ -44,7 +43,24 @@ export default class Attorneys extends Component {
         visible: false
       }) 
     }
-
+    componentWillMount(){
+        let user = firebaseRef.auth().currentUser;
+        sha256(user.email).then( hash => {
+            let search = "School_bus/"+hash
+            console.log(search)
+            var ref = firebaseRef.database().ref(search);
+            ref.once("value")
+            .then((snapshot) =>{
+                snapshot.child("attorneys").val().each((e, i) =>{
+                    console.log(e);
+                    console.log(i);
+                })
+            })
+        })
+    }
+    getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+    }
     render() {
 
         const { page } = this.state;

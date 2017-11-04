@@ -20,8 +20,24 @@ import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
 import NewAccount from './components/Login/NewAccount'
 import Attorneys from './components/Attorneys'
+import { firebaseRef } from './services/firebase.js'
 
 export default class FurgonerServer extends Component {
+  componentWillMount(){
+    console.log("revisando si tenía sesión")
+    firebaseRef.auth().onAuthStateChanged((user) => {
+        if (user) {
+            console.log("ya estaba conectado")
+            console.log(user.email)
+            Actions.main()
+            
+          // User is signed in.
+        } else {
+            console.log("no estaba conectado")
+          // No user is signed in.
+        }
+    });
+  }
   render(){
     return (
       <Router navigationBarStyle={styles.navBar} titleStyle={styles.navBarTitle}>
