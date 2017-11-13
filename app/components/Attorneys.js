@@ -31,9 +31,9 @@ export default class Attorneys extends Component {
                 alert(`El nombre de la persona es " ${snapshot.child("name").val()}"`)
                 console.log(snapshot.child("children").numChildren())
                 console.log(snapshot.child("children").val()); 
-                let temp_atorney = this.state.attorneys
-                temp_atorney.push({ name : snapshot.child("name").val(), children: snapshot.child("children").val() , number_children: snapshot.child("children").numChildren() })
-                this.setState({attorneys : temp_atorney })
+                let temp_attorney = this.state.attorneys
+                temp_attorney.push({ name : snapshot.child("name").val(), children: snapshot.child("children").val() , number_children: snapshot.child("children").numChildren() })
+                this.setState({attorneys : temp_attorney })
         });
           
       })
@@ -43,23 +43,67 @@ export default class Attorneys extends Component {
         visible: false
       }) 
     }
-    componentWillMount(){
+
+    componentWillMount() {
+        this.getAttorneys()
+    }
+    getAttorneys(){
         let user = firebaseRef.auth().currentUser;
-        sha256(user.email).then( hash => {
-            let search = "School_bus/"+hash
-            console.log(search)
-            var ref = firebaseRef.database().ref(search);
-            ref.once("value")
-            .then((snapshot) =>{
-                snapshot.child("attorneys").val().each((e, i) =>{
-                    console.log(e);
-                    console.log(i);
+        let search = "School_bus/" + user.displayName + "/attorneys"
+        var ref = firebaseRef.database().ref(search).orderByKey();;
+        ref.once("value")
+            .then((snapshot) => {
+                let ready_temp_attorneys = []
+                snapshot.forEach((childSnapshot) => {
+                    let attorney = {}
+                    let val = childSnapshot.val()
+                    if (val.hasOwnProperty("state") && val.state == this.props.attorney_status) {
+                        attorney[childSnapshot.key] = childSnapshot.val()
+                        ready_temp_attorneys.push(attorney)
+                    }
+                });
+                this.setState({
+                    attorneys: ready_temp_attorneys,
                 })
             })
-        })
+            .then((temp_attorney) => {
+                console.log("mostrando attorney")
+                let ready_temp_attorneys = this.state.attorneys
+                ready_temp_attorneys.forEach((attorney,index) => {
+                    this.searchAttorney(attorney,index)
+                })
+            })
+    }
+    recharge(){
+        this.getAttorneys()
     }
     getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key] === value);
+    }
+
+    searchAttorney(hash,index){
+        console.log("in search attorney with index: "+index)
+        let attorneyid = Object.keys(hash)[0]
+        let search = "Attorney/" + Object.keys(hash)[0] + "/personal_info"
+        var ref = firebaseRef.database().ref(search);
+        ref.once("value")
+            .then((snapshot) => {
+                temp_atorney = {
+                    name: snapshot.child("name").val(),
+                    last_name: snapshot.child("last_name").val(),
+                    county: snapshot.child("county").val(),
+                    street: snapshot.child("street").val(),
+                    street_number: snapshot.child("street_number").val(),
+                    children: snapshot.child("children").val(),
+                    number_children: snapshot.child("children").numChildren(),
+                    attorneyid: attorneyid
+                }
+                let ready_temp_attorneys = this.state.attorneys
+                ready_temp_attorneys[index] = temp_atorney
+                this.setState({attorneys : ready_temp_attorneys})
+                // console.log(this.state.attorneys)
+                // return temp_atorney
+            })
     }
     render() {
 
@@ -69,33 +113,44 @@ export default class Attorneys extends Component {
         
         return (
           <View style={styles.container}>
+
             <ScrollView>
+
                 <List style={styles.list}>
-                { this.state.attorneys.map((e, i) =>
-                            <AttorneysCard key={i} attorney = {e}/>
+                    {
+                        Object.values(this.state.attorneys).map((e, i) =>
+                            <AttorneysCard key={i} attorney = {e} type={this.props.attorney_status}/>
                         )}
                 </List>
                 
             </ScrollView>
-            <View style={styles.form}>
-                        <View style={styles.formContainer}>
-                            <TouchableOpacity style={styles.buttonContainer} onPress={()=> this.setState({promptVisible:true})}>
-                                <Text style={styles.buttonText}> 
-                                    Agregar apoderado
+            {
+            this.props.attorney_status == "pending" ? 
+                <View style={styles.form}>
+                    <View style={styles.formContainer}>
+                        <TouchableOpacity style={styles.buttonContainer} onPress={this.recharge.bind(this)}>
+                            <Text style={styles.buttonText}>
+                                recargar apoderados
                                 </Text>
-                            </TouchableOpacity>
-                        </View>
-                </View>
+                        </TouchableOpacity>
+                        {/* <TouchableOpacity style={styles.buttonContainer} onPress={()=> this.setState({promptVisible:true})}>
+                            <Text style={styles.buttonText}> 
+                                Agregar apoderado
+                            </Text>
+                        </TouchableOpacity> */}
+                    </View>
+                </View> : null 
+            } 
             <Prompt
-              title="Ingrese correo del apoderado"
-              placeholder="example@mail.com"
-              defaultValue="test@mail.cl"
-              visible={ this.state.promptVisible }
-              onCancel={ () => this.setState({
-                promptVisible: false,
-                message: "You cancelled"
-              }) }
-              onSubmit={ this.searchEmail.bind(this) }/>     
+                title="Ingrese correo del apoderado"
+                placeholder="example@mail.com"
+                defaultValue="test@mail.cl"
+                visible={this.state.promptVisible}
+                onCancel={() => this.setState({
+                    promptVisible: false,
+                    message: "You cancelled"
+                })}
+                onSubmit={this.searchEmail.bind(this)} />   
               <Spinner visible={this.state.visible} textContent={"Cargando..."} textStyle={{color: '#FFF'}} />       
           </View>  
           

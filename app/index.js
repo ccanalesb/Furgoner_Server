@@ -11,7 +11,6 @@ import { Button } from 'antd-mobile';
 import { NavBar, Icon } from 'antd-mobile';
 
 import { Actions, Stack, Drawer } from 'react-native-router-flux';
-import Login from 'react-native-simple-login'
 import InputScreen from './components/InputScreen'
 import ScarletScreen  from './components/ScarletScreen'
 import LoginWrapper  from './components/Login/LoginWrapper'
@@ -19,7 +18,7 @@ import SideDrawer  from './components/SideDrawer'
 import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
 import NewAccount from './components/Login/NewAccount'
-import Attorneys from './components/Attorneys'
+import AttorneysTabs from './components/AttorneysTabs'
 import { firebaseRef } from './services/firebase.js'
 
 export default class FurgonerServer extends Component {
@@ -66,12 +65,13 @@ export default class FurgonerServer extends Component {
                 key="home"
                 component={ShowMap}
                 title="Proximos destinos"
-                initial
+                
               />
               <Scene
                 key="attorneys"
-                component={Attorneys}
+                component={AttorneysTabs}
                 title="Apoderados"
+                initial
               />
             </Drawer>  
           </Scene>

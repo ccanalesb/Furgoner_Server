@@ -5,24 +5,23 @@ import { StyleSheet, Text, View, ViewPropTypes,
   ScrollView,
   Image,
   TouchableNativeFeedback,
-  TouchableOpacity } from 'react-native';
+  TouchableOpacity,
+  TouchableHighlight,
+  Platform } from 'react-native';
 import Button from 'react-native-button';
 import { Actions } from 'react-native-router-flux';
 import { firebaseRef } from '../../services/firebase.js'
+import { sha256 } from 'react-native-sha256';
 
 const window = Dimensions.get('window');
 const uri = 'https://pickaface.net/gallery/avatar/Opi51c74d0125fd4.png';
 class DrawerContent extends React.Component {
+  constructor(props) {
+    super(props);
 
-/*   logOut(){
-    console.log("Cerrando sesión")
-    firebaseRef.auth().signOut()
-    .then(() => {
-      Actions.login({logout:true})
-    }, function(error) {
-      alert("No se pudo cerrar sesión")
-    });
-  } */
+    this.state = {
+    };
+  }
 
   async logOut() {
         try {
@@ -37,15 +36,27 @@ class DrawerContent extends React.Component {
   render() {
     return (
       <View style={styles.drawer}>
-        <TouchableNativeFeedback style={styles.header} >
-          <View>
-            <Image
-              style={styles.headerIcon}
-              source={{ uri }}
-            />
-            <Text style={styles.headerTitle}>Your name</Text>
-          </View>
-        </TouchableNativeFeedback>
+        {Platform.OS === 'android' ?
+          <TouchableNativeFeedback style={styles.header} >
+            <View>
+              <Image
+                style={styles.headerIcon}
+                source={{ uri }}
+              />
+              <Text style={styles.headerTitle}>Your name</Text>
+            </View>
+          </TouchableNativeFeedback>
+          :
+          < TouchableHighlight style={styles.header} >
+            <View>
+              <Image
+                style={styles.headerIcon}
+                source={{ uri }}
+              />
+              <Text style={styles.headerTitle}>Your name</Text>
+            </View>
+          </TouchableHighlight>
+        }
         <ScrollView scrollsToTop={false} style={styles.content}>
           <TouchableOpacity style={styles.listItem} onPress={() => Actions.home()}>
               <Text

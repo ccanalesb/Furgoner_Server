@@ -5,11 +5,13 @@ import {
     Dimensions,
     Button,
     TouchableOpacity,
-    Text
+    Text,
+    Image
 } from 'react-native';
 import MapView from 'react-native-maps'
 import { Actions } from 'react-native-router-flux';
 import { firebaseRef } from '../services/firebase.js'
+import { sha256 } from 'react-native-sha256';
 
 
 
@@ -39,7 +41,8 @@ export default class ShowMap extends Component {
                 longitude : 0
             },
             follow_marker : true,
-            user : null
+            user : null,
+            in_transit : false
         };
     }
     watchID : ?number = null
@@ -75,12 +78,13 @@ export default class ShowMap extends Component {
                 console.log("Watching position")
                 var lat = parseFloat(position.coords.latitude)
                 var long = parseFloat(position.coords.longitude)
-                if(this.state.user != null){
-                    let timerID = setTimeout(() => {firebaseRef.database().ref('School_bus/' + this.state.user.uid).update({
+                if(this.state.in_transit){
+                    let user = firebaseRef.auth().currentUser;
+                    let search = "School_bus/" + user.displayName 
+                    firebaseRef.database().ref('School_bus/' + user.displayName).update({
                         latitude: lat,
                         longitude: long,
-                    })},4000)
-                    clearInterval(timerID)
+                    })
                 }
                 // const { latitudeDelta, longitudeDelta} = getRegionForCoordinates({ latitude: lat, longitude: long })
                 // console.log(latitudeDelta)
@@ -167,17 +171,46 @@ export default class ShowMap extends Component {
         }
  
     }
+    initRound(){
+        
+        let user = firebaseRef.auth().currentUser;
+        if(this.state.in_transit){
+            console.log("Terminado el viaje de la vida")
+            this.setState({ in_transit: false })
+            firebaseRef.database().ref('School_bus/' + user.displayName).update({
+                in_transit: false,
+                latitude: this.state.markerPosition.latitude,
+                longitude: this.state.markerPosition.longitude
+            });
+        }
+        else{
+            console.log("iniciando el viaje de la vida")
+            this.setState({ in_transit: true })
+            firebaseRef.database().ref('School_bus/' + user.displayName).update({
+                in_transit: true,
+                latitude: this.state.markerPosition.latitude,
+                longitude: this.state.markerPosition.longitude
+            });                
+        }
+    }
     componentWillMount(){
-        let timerID = setTimeout(() => {firebaseRef.auth().onAuthStateChanged((user) => {
+        firebaseRef.auth().onAuthStateChanged((user) => {
             if (user) {
+                console.log(user)
                 this.setState({ user: user })
             } else {
                 this.setState({user: null})
                 navigator.geolocation.clearWatch(this.watchID)
                 Actions.login()
             }
-        })},4000)
-        clearInterval(timerID)
+        })
+        let user = firebaseRef.auth().currentUser;
+        var ref = firebaseRef.database().ref('School_bus/' + user.displayName);
+        ref.once("value")
+            .then((snapshot) => {
+                this.setState({ in_transit: snapshot.child("in_transit").val() })
+                console.log(this.state.in_transit)
+            })
     }
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
@@ -213,9 +246,20 @@ export default class ShowMap extends Component {
                     </View>    
                 </MapView.Marker>
                 </MapView>
-                <TouchableOpacity style={styles.buttonContainer} onPress = {this.handlePress.bind(this)}>
+                <TouchableOpacity style={styles.roundButtom} onPress={this.handlePress.bind(this)}>
+                    <Image
+                        style={{ width: 30, height: 30 }}
+                        source={require('../../images/follow.png')}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity 
+                    style={styles.buttonContainer} 
+                    onPress={this.initRound.bind(this)}
+                    activeOpacity={.1}
+                    underlayColor={'rgba(0,0,0,'+this.state.opacity+')'}
+                >
                     <Text style={styles.buttonText}>
-                        Iniciar Viaje
+                        {this.state.in_transit ? 'Terminar Viaje' : 'Iniciar Viaje'}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -278,6 +322,20 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 20,
+    },
+    roundButtom:{
+        alignSelf : 'flex-end',
+        left: -20,
+        top : -20,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 50,
+        height: 50,
+        backgroundColor: '#fff',
+        // backgroundColor: '#f10f3c',
+        borderRadius: 100,
     }
   });
 // const styles = StyleSheet.create({

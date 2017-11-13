@@ -10,7 +10,6 @@ import {
     Button } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
-import Login from 'react-native-simple-login'
 import { firebaseRef } from '../../services/firebase.js'
 import Spinner from 'react-native-loading-spinner-overlay';
 export default class LoginWrapper extends Component {

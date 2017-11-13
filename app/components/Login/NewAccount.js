@@ -40,6 +40,17 @@ export default class NewAccount extends Component {
                         var user_email = user.email
                         sha256(user_email).then( hash => {
                             console.log(user_email)
+                            let user = firebaseRef.auth().currentUser;
+                            user.updateProfile({
+                                displayName: hash
+                            })
+                            .then((user) => {
+                                console.log("Update user with hash")
+                                console.log(firebaseRef.auth().currentUser)
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                            });
                             firebaseRef.database().ref('School_bus/' + user_uid).set({
                                 latitude: 0,
                                 longitude: 0,
