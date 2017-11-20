@@ -35,21 +35,6 @@
 		2DCD954D1E0B4F2C00145EB5 /* FurgonerServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FurgonerServerTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-<<<<<<< HEAD
-		B5C61B842317461D93EA665F /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 290E7EB3E0F24127B3824EAA /* libAirMaps.a */; };
-		83E9EA3AA9224ED0A45898F5 /* libreact-native-sha256.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CFBE2EE373C4689A1908818 /* libreact-native-sha256.a */; };
-		D5FEA58B464741C19260A5C9 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7C09634AE449ED97AB4982 /* libRNVectorIcons.a */; };
-		64506008657B49A897C5B2B4 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F968AF09862443793F00E9E /* Entypo.ttf */; };
-		67E3F1C2B2354546B3910A9F /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA86EF8C89FA4913852A539E /* EvilIcons.ttf */; };
-		36F58CDAE9304F7BB186DF90 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2ABC2E89AE134FE5A4D3196D /* FontAwesome.ttf */; };
-		F14E09AA74D74DCFA8FE5B30 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 995F6AAD81984C5FA3FE4E20 /* Foundation.ttf */; };
-		46715CBCBD7342B09971E762 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0C108ABC12F849D8B8F2E76E /* Ionicons.ttf */; };
-		9E7BCC3726EB425C982DCC35 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 993CCF22F7FA4E13A4BC002A /* MaterialCommunityIcons.ttf */; };
-		E76A027B319D40EFAD8DA29C /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CBBC07E503A140D4A0BCAE98 /* MaterialIcons.ttf */; };
-		6399CF5AF55F47DDA4736E5B /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7E1909ECE46B4A7FAB88BCD4 /* Octicons.ttf */; };
-		FF6E30278F914F3E8D959D8B /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 05EB6CAAB59A464CA86D23CE /* SimpleLineIcons.ttf */; };
-		CB2FFE23BF9B4717BFC98999 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9E839F3929443029D47BCFB /* Zocial.ttf */; };
-=======
 		4049CE33F0F14ACC85752841 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E005F0F213405EB82B8338 /* libAirMaps.a */; };
 		B5DE2B5C7A134D09A88D5172 /* libreact-native-sha256.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FC3B027881148959515F7DE /* libreact-native-sha256.a */; };
 		56E72D3BCCCA4E7E9E821B3D /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E0B454F6D6E44F7B13FC0B4 /* libRNVectorIcons.a */; };
@@ -63,7 +48,6 @@
 		ED70813A724C4D9280EA3FAF /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8895B68B56944713B26E83DB /* Octicons.ttf */; };
 		913D0D167273411C871AF0C4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0755FA2DE1CC4CF88DA5F656 /* SimpleLineIcons.ttf */; };
 		C5D92BE210CE4B958CAB30C6 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F81CC9D13FA407A8E87E54D /* Zocial.ttf */; };
->>>>>>> origin/matgf
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

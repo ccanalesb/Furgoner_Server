@@ -18,12 +18,9 @@ import SideDrawer  from './components/SideDrawer'
 import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
 import NewAccount from './components/Login/NewAccount'
-<<<<<<< HEAD
 import AttorneysTabs from './components/AttorneysTabs'
-=======
 import NotificationView from './components/notifications/NotificationView'
 import Attorneys from './components/Attorneys'
->>>>>>> origin/matgf
 import { firebaseRef } from './services/firebase.js'
 
 export default class FurgonerServer extends Component {
