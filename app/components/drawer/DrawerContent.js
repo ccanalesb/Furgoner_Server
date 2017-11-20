@@ -74,22 +74,22 @@ class DrawerContent extends React.Component {
               Apoderados
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => Actions.notification()}>
+          {/* <TouchableOpacity style={styles.listItem} onPress={() => Actions.notification()}>
             <Text
               
               style= {styles.listItemTitle}
             >
               Notificaciones
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={() => console.log("contact")}>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity style={styles.listItem} onPress={() => console.log("contact")}>
             <Text
               
               style= {styles.listItemTitle}
             >
               Contacts
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={styles.listItem} onPress={() => this.logOut()}>
             <Text
               

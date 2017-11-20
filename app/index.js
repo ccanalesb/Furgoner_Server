@@ -19,7 +19,7 @@ import DrawerContent from './components/drawer/DrawerContent';
 import ShowMap  from './components/ShowMap'
 import NewAccount from './components/Login/NewAccount'
 import AttorneysTabs from './components/AttorneysTabs'
-import NotificationView from './components/notifications/NotificationView'
+// import NotificationView from './components/notifications/NotificationView'
 import Attorneys from './components/Attorneys'
 import { firebaseRef } from './services/firebase.js'
 
@@ -75,12 +75,12 @@ export default class FurgonerServer extends Component {
                 title="Apoderados"
                 initial
               />
-              <Scene
+              {/* <Scene
                 key="notification"
                 component={NotificationView}
                 title="Notifficacioens"
                 
-              />
+              /> */}
 
             </Drawer>  
           </Scene>

@@ -42,7 +42,8 @@ export default class ShowMap extends Component {
             },
             follow_marker : true,
             user : null,
-            in_transit : false
+            in_transit : false,
+            attorneys : []
         };
     }
     watchID : ?number = null
@@ -145,6 +146,10 @@ export default class ShowMap extends Component {
     touchMarker(e){
         console.log("tocando el marcado")
         console.log(e.nativeEvent)
+        console.log(this.state)
+        this.state.attorneys.map((attorney) => (
+            console.log(attorney)
+        ))
     }
     moveMarker(e){
         console.log("terminando de mover")
@@ -169,7 +174,7 @@ export default class ShowMap extends Component {
                 }
             })
         }
- 
+        this.getAttorneys()
     }
     initRound(){
         
@@ -211,13 +216,88 @@ export default class ShowMap extends Component {
                 this.setState({ in_transit: snapshot.child("in_transit").val() })
                 console.log(this.state.in_transit)
             })
+        this.getAttorneys()
+        
     }
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps)
+    getAttorneys() {
+        let user = firebaseRef.auth().currentUser;
+        let search = "School_bus/" + user.displayName + "/attorneys"
+        var ref = firebaseRef.database().ref(search).orderByKey();;
+        ref.once("value")
+            .then((snapshot) => {
+                let ready_temp_attorneys = []
+                snapshot.forEach((childSnapshot) => {
+                    let attorney = {}
+                    let val = childSnapshot.val()
+                    if (val.hasOwnProperty("state")) {
+                        attorney[childSnapshot.key] = childSnapshot.val()
+                        ready_temp_attorneys.push(attorney)
+                    }
+                });
+                this.setState({
+                    attorneys: ready_temp_attorneys,
+                })
+            })
+            .then((temp_attorney) => {
+                let ready_temp_attorneys = this.state.attorneys
+                ready_temp_attorneys.forEach((attorney, index) => {
+                    this.searchAttorney(attorney, index)
+                })
+            })
+    }
+    searchAttorney(hash, index) {
+        console.log("in search attorney with index: " + index)
+        let attorneyid = Object.keys(hash)[0]
+        let search = "Attorney/" + Object.keys(hash)[0] + "/personal_info"
+        var ref = firebaseRef.database().ref(search);
+        ref.once("value")
+            .then((snapshot) => {
+                temp_atorney = {
+                    name: snapshot.child("name").val(),
+                    last_name: snapshot.child("last_name").val(),
+                    
+                    street: snapshot.child("street").val(),
+                    street_number: snapshot.child("street_number").val(),
+                    position: {
+                        longitude: snapshot.child("longitude").val(),
+                        latitude: snapshot.child("latitude").val()
+                    },
+                    number_children: snapshot.child("children").numChildren(),
+                    attorneyid: attorneyid
+                }
+                let ready_temp_attorneys = this.state.attorneys
+                ready_temp_attorneys[index] = temp_atorney
+                this.setState({ attorneys: ready_temp_attorneys })
+            })
     }
     render(){
         /* this.watcher_position() */
         let mapRegion = {}
+        var markers = []
+        if (this.state.attorneys.length > 0){
+            markers = this.state.attorneys.map((attorney,index) => {
+                if (attorney.hasOwnProperty("position")) {
+                    // console.log(attorney)
+                    return(
+                        <MapView.Marker
+                            key = {index}
+                            title={attorney.name + " " + attorney.last_name}
+                            description={"Dirección: "+ attorney.street +" "+ attorney.street_number}
+                            coordinate={{
+                                latitude: attorney.position.latitude,
+                                longitude: attorney.position.longitude,
+                            }}
+                        >
+                            <View style={styles.radius2}>
+                                <View style={styles.marker2}>
+                                </View>
+                            </View>    
+                        </MapView.Marker>
+                    )
+                }
+            })
+            // console.log(markers)
+        }
         if(this.state.follow_marker){
             mapRegion = this.state.position
         }
@@ -245,7 +325,24 @@ export default class ShowMap extends Component {
                         </View>    
                     </View>    
                 </MapView.Marker>
+                {markers}
                 </MapView>
+                {/* {   
+                    this.state.attorneys.map((attorney,index) => (
+                        <MapView.Marker
+                            key={index}
+                            coordinate={attorney.position}
+                            title={attorney.name}
+                        >
+                            <View style={styles.radius}>
+                                <View style={styles.marker}>
+                                </View>
+                            </View> 
+                        </MapView.Marker>
+                    ))
+                } */}
+
+                {/* {markers === null ? null : markers} */}
                 <TouchableOpacity style={styles.roundButtom} onPress={this.handlePress.bind(this)}>
                     <Image
                         style={{ width: 30, height: 30 }}
@@ -288,6 +385,26 @@ const styles = StyleSheet.create({
         borderRadius: 20/2,
         overflow: 'hidden',
         backgroundColor: '#007AFF'
+    },
+    radius2: {
+        height: 30,
+        width: 30,
+        borderRadius: 50/2,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(0,122,255,0.1)',
+        borderWidth: 1,
+        borderColor: 'rgba(0,122,255,0.3)',
+        alignItems: 'center',
+        justifyContent : 'center'
+    },
+    marker2: {
+        height: 20,
+        width: 20,
+        borderWidth: 3,
+        borderColor: 'white',
+        borderRadius: 20/2,
+        overflow: 'hidden',
+        backgroundColor: 'red'
     },
     container: {
       ...StyleSheet.absoluteFillObject,
