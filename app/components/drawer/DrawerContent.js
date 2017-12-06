@@ -14,7 +14,8 @@ import { firebaseRef } from '../../services/firebase.js'
 import { sha256 } from 'react-native-sha256';
 
 const window = Dimensions.get('window');
-const uri = 'https://pickaface.net/gallery/avatar/Opi51c74d0125fd4.png';
+// const uri = 'https://pickaface.net/gallery/avatar/Opi51c74d0125fd4.png';
+const uri = 'https://randomuser.me/api/portraits/lego/' + Math.floor(Math.random() * 8) + '.jpg';
 class DrawerContent extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +35,7 @@ class DrawerContent extends React.Component {
     
     }
   render() {
+    let user = firebaseRef.auth().currentUser;
     return (
       <View style={styles.drawer}>
         {Platform.OS === 'android' ?
@@ -43,7 +45,7 @@ class DrawerContent extends React.Component {
                 style={styles.headerIcon}
                 source={{ uri }}
               />
-              <Text style={styles.headerTitle}>Your name</Text>
+              <Text style={styles.headerTitle}>{user.email}</Text>
             </View>
           </TouchableNativeFeedback>
           :
@@ -53,7 +55,7 @@ class DrawerContent extends React.Component {
                 style={styles.headerIcon}
                 source={{ uri }}
               />
-              <Text style={styles.headerTitle}>Your name</Text>
+              <Text style={styles.headerTitle}>{user.email}</Text>
             </View>
           </TouchableHighlight>
         }

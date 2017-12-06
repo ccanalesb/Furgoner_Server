@@ -84,16 +84,17 @@ export default class Attorneys extends Component {
     searchAttorney(hash,index){
         console.log("in search attorney with index: "+index)
         let attorneyid = Object.keys(hash)[0]
-        let search = "Attorney/" + Object.keys(hash)[0] + "/personal_info"
+        let search = "Attorney/" + Object.keys(hash)[0]
         var ref = firebaseRef.database().ref(search);
         ref.once("value")
             .then((snapshot) => {
+                console.log(snapshot.val())
                 temp_atorney = {
-                    name: snapshot.child("name").val(),
-                    last_name: snapshot.child("last_name").val(),
-                    county: snapshot.child("county").val(),
-                    street: snapshot.child("street").val(),
-                    street_number: snapshot.child("street_number").val(),
+                    name: snapshot.child("personal_info").child("name").val(),
+                    last_name: snapshot.child("personal_info").child("last_name").val(),
+                    county: snapshot.child("personal_info").child("county").val(),
+                    street: snapshot.child("personal_info").child("street").val(),
+                    street_number: snapshot.child("personal_info").child("street_number").val(),
                     children: snapshot.child("children").val(),
                     number_children: snapshot.child("children").numChildren(),
                     attorneyid: attorneyid
@@ -103,6 +104,9 @@ export default class Attorneys extends Component {
                 this.setState({attorneys : ready_temp_attorneys})
                 // console.log(this.state.attorneys)
                 // return temp_atorney
+            })
+            .then(()=>{
+                console.log(this.state)
             })
     }
     render() {

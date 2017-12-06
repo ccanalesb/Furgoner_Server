@@ -71,7 +71,29 @@ export default class ShowMap extends Component {
                 })
                 console.log("Get current position")
 
-            }, (error) => alert(JSON.stringify(error)),
+            }, (error) => {
+                alert(JSON.stringify(error))
+                let user = firebaseRef.auth().currentUser;
+                var ref = firebaseRef.database().ref('School_bus/' + user.displayName);
+                ref.once("value")
+                    .then((snapshot) => {
+                        console.log("in error")
+                        console.log(snapshot.child("latitude").val())
+                        this.setState({
+                            position: {
+                                latitude: snapshot.child("latitude").val(),
+                                longitude: snapshot.child("longitude").val(),
+                                latitudeDelta: this.state.position.latitudeDelta,
+                                longitudeDelta: this.state.position.longitudeDelta
+                            },
+                            markerPosition: { 
+                                latitude: snapshot.child("latitude").val(), 
+                                longitude: snapshot.child("longitude").val()
+                            }
+                        })
+                        console.log(this.state.in_transit)
+                    })
+            },
             { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
 
             this.watchID = navigator.geolocation.watchPosition((position)=>{
@@ -115,7 +137,25 @@ export default class ShowMap extends Component {
                     })
                 }
 
-            }, (error) => alert(JSON.stringify(error)),
+            }, (error) => {
+                alert(JSON.stringify(error))
+                let user = firebaseRef.auth().currentUser;
+                var ref = firebaseRef.database().ref('School_bus/' + user.displayName);
+                ref.once("value")
+                    .then((snapshot) => {
+                        console.log("in error")
+                        console.log(snapshot.child("latitude").val())
+                        this.setState({
+                            position: {
+                                latitude: snapshot.child("latitude").val(),
+                                longitude: snapshot.child("longitude").val(),
+                                latitudeDelta: this.state.position.latitudeDelta,
+                                longitudeDelta: this.state.position.longitudeDelta
+                            }
+                        })
+                        console.log(this.state.in_transit)
+                    })
+            },
             { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
         
     }
@@ -213,7 +253,20 @@ export default class ShowMap extends Component {
         var ref = firebaseRef.database().ref('School_bus/' + user.displayName);
         ref.once("value")
             .then((snapshot) => {
-                this.setState({ in_transit: snapshot.child("in_transit").val() })
+                this.setState({ 
+                    in_transit: snapshot.child("in_transit").val(),
+                    position: {
+                        latitude: snapshot.child("latitude").val(),
+                        longitude: snapshot.child("longitude").val(),
+                        latitudeDelta: this.state.position.latitudeDelta,
+                        longitudeDelta: this.state.position.longitudeDelta
+                    },
+                    markerPosition: {
+                        latitude: snapshot.child("latitude").val(),
+                        longitude: snapshot.child("longitude").val()
+                    }
+                 })
+                 
                 console.log(this.state.in_transit)
             })
         this.getAttorneys()
@@ -270,6 +323,16 @@ export default class ShowMap extends Component {
                 this.setState({ attorneys: ready_temp_attorneys })
             })
     }
+    distance(lat1, lon1, lat2, lon2) {
+        console.log("calculando distancia")
+        var p = 0.017453292519943295;    // Math.PI / 180
+        var c = Math.cos;
+        var a = 0.5 - c((lat2 - lat1) * p) / 2 +
+            c(lat1 * p) * c(lat2 * p) *
+            (1 - c((lon2 - lon1) * p)) / 2;
+
+        return parseInt(12742 * Math.asin(Math.sqrt(a))); // 2 * R; R = 6371 km
+    }
     render(){
         /* this.watcher_position() */
         let mapRegion = {}
@@ -281,8 +344,21 @@ export default class ShowMap extends Component {
                     return(
                         <MapView.Marker
                             key = {index}
-                            title={attorney.name + " " + attorney.last_name}
-                            description={"Dirección: "+ attorney.street +" "+ attorney.street_number}
+                            title={
+                                attorney.name 
+                                + " " 
+                                + attorney.last_name 
+                                + " a " 
+                                + this.distance(
+                                    this.state.position.latitude,
+                                    this.state.position.longitude,
+                                    attorney.position.latitude,
+                                    attorney.position.longitude,)
+                                +"(Km)"
+                            }
+                            description={
+                                "Dirección: "+ attorney.street +" "+ attorney.street_number
+                            }
                             coordinate={{
                                 latitude: attorney.position.latitude,
                                 longitude: attorney.position.longitude,
@@ -290,6 +366,7 @@ export default class ShowMap extends Component {
                         >
                             <View style={styles.radius2}>
                                 <View style={styles.marker2}>
+                                    
                                 </View>
                             </View>    
                         </MapView.Marker>

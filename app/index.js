@@ -22,7 +22,7 @@ import AttorneysTabs from './components/AttorneysTabs'
 // import NotificationView from './components/notifications/NotificationView'
 import Attorneys from './components/Attorneys'
 import { firebaseRef } from './services/firebase.js'
-
+console.disableYellowBox = true
 export default class FurgonerServer extends Component {
   componentWillMount(){
     console.log("revisando si tenía sesión")
