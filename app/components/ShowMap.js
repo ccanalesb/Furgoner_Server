@@ -73,26 +73,6 @@ export default class ShowMap extends Component {
 
             }, (error) => {
                 alert(JSON.stringify(error))
-                let user = firebaseRef.auth().currentUser;
-                var ref = firebaseRef.database().ref('School_bus/' + user.displayName);
-                ref.once("value")
-                    .then((snapshot) => {
-                        console.log("in error")
-                        console.log(snapshot.child("latitude").val())
-                        this.setState({
-                            position: {
-                                latitude: snapshot.child("latitude").val(),
-                                longitude: snapshot.child("longitude").val(),
-                                latitudeDelta: this.state.position.latitudeDelta,
-                                longitudeDelta: this.state.position.longitudeDelta
-                            },
-                            markerPosition: { 
-                                latitude: snapshot.child("latitude").val(), 
-                                longitude: snapshot.child("longitude").val()
-                            }
-                        })
-                        console.log(this.state.in_transit)
-                    })
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
 
@@ -139,22 +119,6 @@ export default class ShowMap extends Component {
 
             }, (error) => {
                 alert(JSON.stringify(error))
-                let user = firebaseRef.auth().currentUser;
-                var ref = firebaseRef.database().ref('School_bus/' + user.displayName);
-                ref.once("value")
-                    .then((snapshot) => {
-                        console.log("in error")
-                        console.log(snapshot.child("latitude").val())
-                        this.setState({
-                            position: {
-                                latitude: snapshot.child("latitude").val(),
-                                longitude: snapshot.child("longitude").val(),
-                                latitudeDelta: this.state.position.latitudeDelta,
-                                longitudeDelta: this.state.position.longitudeDelta
-                            }
-                        })
-                        console.log(this.state.in_transit)
-                    })
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge : 100 })
         
